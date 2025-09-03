@@ -1,0 +1,3 @@
+/Users/praneetshaw/Desktop/Strategy/Strategy_FIles/Test/cmake-build-debug/CMakeFiles/Test.dir
+/Users/praneetshaw/Desktop/Strategy/Strategy_FIles/Test/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/praneetshaw/Desktop/Strategy/Strategy_FIles/Test/cmake-build-debug/CMakeFiles/rebuild_cache.dir

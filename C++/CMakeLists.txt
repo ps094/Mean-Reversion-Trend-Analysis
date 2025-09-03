@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.24)
+project(Test)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -Wall -Wextra")
+find_package(libmongoc-1.0 REQUIRED)
+find_package(libbson-1.0 REQUIRED)
+include_directories("/usr/local/include/libmongoc-1.0")
+include_directories("/usr/local/include/libbson-1.0")
+find_library(MONGODB_LIBRARY mongoc-1.0)
+find_library(BSON_LIBRARY bson-1.0)
+
+add_executable(Test main.cpp BS.h DataFrame.cpp DataFrame.h Directional_Signal_Generator.cpp Directional_Signal_Generator.h Directional_Strategy_Manager.cpp Directional_Strategy_Manager.h Mongo_Adapter.cpp Mongo_Adapter.h Utilities.h Strategy_Simulator.cpp Strategy_Simulator.h Utilities.cpp Numerical_Solver.cpp Numerical_Solver.h Sorting_Pairs.cpp Sorting_Pairs.h Pnl_Sorting_Pairs.cpp Pnl_Sorting_Pairs.h Drawdown_Sorting_Pairs.cpp Drawdown_Sorting_Pairs.h TS1_Pairs.cpp TS1_Pairs.h TS2_Pairs.cpp TS2_Pairs.h TS3_Pairs.cpp TS3_Pairs.h PDev_Pairs.cpp PDev_Pairs.h MDev_Pairs.cpp MDev_Pairs.h PRDev_Pairs.cpp PRDev_Pairs.h PDiff_Pairs.cpp PDiff_Pairs.h MDiff_Pairs.cpp MDiff_Pairs.h PRDiff_Pairs.cpp PRDiff_Pairs.h)
+target_link_libraries(Test ${MONGODB_LIBRARY} ${BSON_LIBRARY})
+set(TARGET Test PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
