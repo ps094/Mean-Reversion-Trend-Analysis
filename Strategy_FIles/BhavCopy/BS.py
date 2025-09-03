@@ -1,0 +1,77 @@
+from math import log, sqrt, pi, exp
+from scipy.stats import norm
+from datetime import datetime, date
+import numpy as np
+import pandas as pd
+
+def d1(S,K,T,r,sigma):
+    return(log(S/K)+(r+sigma**2/2.)*T)/(sigma*sqrt(T))
+
+def d2(S,K,T,r,sigma):
+    return d1(S,K,T,r,sigma)-sigma*sqrt(T)
+
+def bs_call(S,K,T,r,sigma):
+    return S*norm.cdf(d1(S,K,T,r,sigma))-K*exp(-r*T)*norm.cdf(d2(S,K,T,r,sigma))
+  
+def bs_put(S,K,T,r,sigma):
+    return K*exp(-r*T)-S+bs_call(S,K,T,r,sigma)
+
+def call_implied_volatility(Price, S, K, T, r):
+    sigma = 0.001
+    try:
+        while sigma < 10:
+            Price_implied = S * norm.cdf(d1(S, K, T, r, sigma))-K*exp(-r*T) * norm.cdf(d2(S, K, T, r, sigma))
+            if Price_implied>Price:
+                if sigma<=0.02:
+                    return np.nan
+                else:
+                    return sigma
+            sigma += 0.001
+    except:
+        return np.nan
+    return np.nan
+
+def put_implied_volatility(Price, S, K, T, r):
+    sigma = 0.001
+    try:
+        while sigma < 10:
+            Price_implied = K*exp(-r*T)-S+bs_call(S, K, T, r, sigma)
+            if Price_implied>Price:
+                if sigma<=0.02:
+                    return np.nan
+                else:
+                    return sigma
+            sigma += 0.001
+    except:
+        return np.nan
+    return np.nan
+
+def implied_volatility(Price, S, K, T, r,opt_typ):
+    if opt_typ=="CE":
+        return call_implied_volatility(Price, S, K, T, r)
+    elif opt_typ=="PE":
+        return put_implied_volatility(Price, S, K, T, r)
+    else:
+        return 0
+
+def call_delta(S,K,T,r,sigma):
+    return norm.cdf(d1(S,K,T,r,sigma))
+def call_gamma(S,K,T,r,sigma):
+    return norm.pdf(d1(S,K,T,r,sigma))/(S*sigma*sqrt(T))
+def call_vega(S,K,T,r,sigma):
+    return (S*norm.pdf(d1(S,K,T,r,sigma))*sqrt(T))
+def call_theta(S,K,T,r,sigma):
+    return -(-(S*norm.pdf(d1(S,K,T,r,sigma))*sigma)/(2*sqrt(T)) - r*K*exp(-r*T)*norm.cdf(d2(S,K,T,r,sigma)))
+def call_rho(S,K,T,r,sigma):
+    return (K*T*exp(-r*T)*norm.cdf(d2(S,K,T,r,sigma)))
+    
+def put_delta(S,K,T,r,sigma):
+    return -norm.cdf(-d1(S,K,T,r,sigma))
+def put_gamma(S,K,T,r,sigma):
+    return norm.pdf(d1(S,K,T,r,sigma))/(S*sigma*sqrt(T))
+def put_vega(S,K,T,r,sigma):
+    return (S*norm.pdf(d1(S,K,T,r,sigma))*sqrt(T))
+def put_theta(S,K,T,r,sigma):
+    return -(-(S*norm.pdf(d1(S,K,T,r,sigma))*sigma)/(2*sqrt(T)) + r*K*exp(-r*T)*norm.cdf(-d2(S,K,T,r,sigma)))
+def put_rho(S,K,T,r,sigma):
+    return (-K*T*exp(-r*T)*norm.cdf(-d2(S,K,T,r,sigma)))
